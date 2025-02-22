@@ -1,0 +1,81 @@
+unit Animator;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls;
+
+type
+  TForm2 = class(TForm)
+    FrameTimer: TTimer;
+    TargetTimer: TTimer;
+    procedure ChangeFrame(Sender: TObject);
+    procedure Init(Sender: TObject);
+    procedure ChangeMoveTarget(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+  Frame = Record
+    bodyHeight : integer;
+  End;
+
+  PositionData = Record
+    x, y : integer;
+    scale : real;
+  End;
+
+var
+  Form2: TForm2;
+
+implementation
+
+const
+positions : Array[0..1] of PositionData =
+(
+  (x : 100; y : 100; scale : 1),
+  (x : 400; y : 500; scale : 2)
+);
+
+frames : Array[0..0] of Frame =
+(
+  (bodyHeight : 100)
+);
+
+var
+  frameId, targetPos : integer;
+  currentPos: PositionData;
+
+{$R *.dfm}
+
+procedure DrawBG(canvas : TCanvas);
+begin
+  //Отрисовка фона
+end;
+
+procedure TForm2.ChangeFrame(Sender: TObject);
+begin
+  Inc(frameId);
+  Form2.Canvas.Pen.Mode := pmNotXor;
+  if targetPos > 0 then
+   Form2.Canvas.Ellipse(positions[targetPos-1].x - 40, positions[targetPos-1].y - 40, positions[targetPos-1].x + 40, positions[targetPos-1].y + 40);
+  Form2.Canvas.Ellipse(positions[targetPos].x - 40, positions[targetPos].y - 40, positions[targetPos].x + 40, positions[targetPos].y + 40);
+end;
+
+procedure TForm2.ChangeMoveTarget(Sender: TObject);
+begin
+  Inc(targetPos);
+end;
+
+procedure TForm2.Init(Sender: TObject);
+begin
+  targetPos := 0;
+  frameId := 0;
+
+  DrawBG(Form2.Canvas);
+end;
+
+end.

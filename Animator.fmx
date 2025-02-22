@@ -7,5 +7,18 @@ object Form2: TForm2
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
+  OnCreate = Init
   DesignerMasterStyle = 0
+  object FrameTimer: TTimer
+    Interval = 400
+    OnTimer = ChangeFrame
+    Left = 304
+    Top = 224
+  end
+  object MoveTimer: TTimer
+    Interval = 4000
+    OnTimer = ChangeMoveTarget
+    Left = 384
+    Top = 216
+  end
 end
