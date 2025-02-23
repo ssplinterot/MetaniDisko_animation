@@ -36,11 +36,10 @@ var
 implementation
 
 const
-positions : Array[0..2] of PositionData =
+positions : Array[0..1] of PositionData =
 (
   (x : 100; y : 100; scale : 1),
-  (x : 400; y : 500; scale : 2),
-  (x : 800; y : 350; scale : 0.5)
+  (x : 400; y : 500; scale : 2)
 );
 
 frames : Array[0..0] of FrameData =
@@ -50,7 +49,7 @@ frames : Array[0..0] of FrameData =
 
 var
   frameId, targetPos : integer;
-  currentPos: PositionData;
+  startPos, currentPos: PositionData;
 
 {$R *.dfm}
 
@@ -60,13 +59,8 @@ begin
 end;
 
 procedure RecalculatePosition();
-var mult : real;
 begin
-  mult := Form2.DrawTimer.Interval / Form2.TargetTimer.Interval;
 
-  currentPos.x:= currentPos.x + Round(mult*(positions[targetPos].x - positions[targetPos-1].x));
-  currentPos.y:= currentPos.y + Round(mult*(positions[targetPos].y - positions[targetPos-1].y));
-  currentPos.scale:= currentPos.scale + mult*(positions[targetPos].scale - positions[targetPos-1].scale);
 end;
 
 procedure RedrawFrame(canvas : TCanvas; pos : PositionData; frame : FrameData);
@@ -102,7 +96,7 @@ begin
   targetPos := 1;
   frameId := 0;
 
-  currentPos := positions[0];
+  startPos := positions[0];
   DrawBG(Form2.Canvas);
 end;
 
