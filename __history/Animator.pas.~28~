@@ -40,7 +40,7 @@ positions : Array[0..2] of PositionData =
 (
   (x : 100; y : 100; scale : 1),
   (x : 400; y : 500; scale : 2),
-  (x : 800; y : 350; scale : 0.5)
+  (x : 300; y : 800; scale : 0.5)
 );
 
 frames : Array[0..0] of FrameData =
