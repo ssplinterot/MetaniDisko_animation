@@ -1,7 +1,7 @@
 object Form2: TForm2
   Left = 0
   Top = 0
-  Caption = 'Form2'
+  Caption = '2'
   ClientHeight = 441
   ClientWidth = 624
   Color = clBtnFace
@@ -13,6 +13,7 @@ object Form2: TForm2
   OnCreate = Init
   TextHeight = 15
   object FrameTimer: TTimer
+    Interval = 2000
     OnTimer = ChangeFrame
     Left = 472
     Top = 384
@@ -24,7 +25,7 @@ object Form2: TForm2
     Top = 384
   end
   object DrawTimer: TTimer
-    Interval = 50
+    Interval = 100
     OnTimer = DrawFrame
     Left = 384
     Top = 384
