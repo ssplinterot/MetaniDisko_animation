@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>1899.12.30 00:00:00.000.685,=C:\Users\user\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.707,=C:\Users\user\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.135,=C:\Users\user\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.491,C:\Users\user\Documents\Embarcadero\Studio\Projects\Project1.dproj=C:\Файлы\Учёба\ОАИП2\Animator\CanvasProject.dproj</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.244,C:\Users\user\Documents\Embarcadero\Studio\Projects\Unit2.dfm=C:\Файлы\Учёба\ОАИП2\Animator\Animator.dfm</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.163,=C:\Users\user\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.500,=C:\Users\user\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.966,=C:\Users\user\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.244,C:\Users\user\Documents\Embarcadero\Studio\Projects\Unit2.pas=C:\Файлы\Учёба\ОАИП2\Animator\Animator.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.465,=C:\Users\user\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.244,C:\Файлы\Учёба\ОАИП2\Animator\Animator.dfm=C:\Users\user\Documents\Embarcadero\Studio\Projects\Unit2.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.491,C:\Файлы\Учёба\ОАИП2\Animator\CanvasProject.dproj=C:\Users\user\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.707,=C:\Users\user\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.135,=C:\Users\user\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.244,C:\Файлы\Учёба\ОАИП2\Animator\Animator.pas=C:\Users\user\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.685,=C:\Users\user\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.163,=C:\Users\user\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
   </Transactions>
 </BorlandProject>
