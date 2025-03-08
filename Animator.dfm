@@ -1,7 +1,6 @@
 object Form2: TForm2
   Left = 0
   Top = 0
-  Caption = '2'
   Caption = 'Form2'
   ClientHeight = 441
   ClientWidth = 624
@@ -12,13 +11,11 @@ object Form2: TForm2
   Font.Name = 'Segoe UI'
   Font.Style = []
   OnCreate = Init
-  TextHeight = 15
-  object FrameTimer: TTimer
-    Interval = 2000
   OnPaint = FormPaint
   OnResize = FormResize
   TextHeight = 15
   object FrameTimer: TTimer
+    Interval = 2000
     OnTimer = ChangeFrame
     Left = 472
     Top = 384
@@ -32,7 +29,6 @@ object Form2: TForm2
   object DrawTimer: TTimer
     Interval = 100
     OnTimer = DrawFrame
-    Interval = 50
     Left = 384
     Top = 384
   end

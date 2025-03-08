@@ -56,9 +56,11 @@ positions : Array[0..2] of PositionData =
 );
 
 
-frames : Array[0..1] of FrameData =
+frames : Array[0..3] of FrameData =
 (
   (rhAngle1 : 0; rhAngle2 : 45; lhAngle1 : -30; lhAngle2 : 60; rlAngle1 : -60; rlAngle2 : 0; llAngle1 : -60; llAngle2 : 0),
+  (rhAngle1 : 50; rhAngle2 : 55; lhAngle1 : -40; lhAngle2 : 0; rlAngle1 : -30; rlAngle2 : 0; llAngle1 : -60; llAngle2 : 50),
+  (rhAngle1 : 50; rhAngle2 : 55; lhAngle1 : -40; lhAngle2 : 0; rlAngle1 : -30; rlAngle2 : 0; llAngle1 : -60; llAngle2 : 50),
   (rhAngle1 : 50; rhAngle2 : 55; lhAngle1 : -40; lhAngle2 : 0; rlAngle1 : -30; rlAngle2 : 0; llAngle1 : -60; llAngle2 : 50)
 );
 
@@ -72,32 +74,16 @@ armHeight = 65;
 armLen = 40;
 legLen = 50;
 
+addDiskFrame = 2;
+startFlyDiskFrame = 3;
+diskSpeedX = 10;
+diskSpeedY = 3;
+
 var
-  targetFrame, targetPos : integer;
+  targetFrame, targetPos, diskx1, diskx2, disky1, disky2 : integer;
   currentPos: PositionData;
   currentFrame : FrameData;
-
-{$R *.dfm}
-
-procedure DrawBG(canvas : TCanvas);
-begin
-  //Отрисовка фона
-end;
-
-procedure RecalculatePosition();
-var mult : real;
-begin
-  if Form2.TargetTimer.Enabled then
-  begin
-
-frames : Array[0..0] of FrameData =
-(
-  (bodyHeight : 100)
-);
-
-var
-  frameId, targetPos : integer;
-  currentPos: PositionData;
+  bg : TBitmap;
 
 {$R *.dfm}
 
@@ -184,7 +170,6 @@ begin
   currentPos.x:= currentPos.x + Round(mult*(positions[targetPos].x - positions[targetPos-1].x));
   currentPos.y:= currentPos.y + Round(mult*(positions[targetPos].y - positions[targetPos-1].y));
   currentPos.scale:= currentPos.scale + mult*(positions[targetPos].scale - positions[targetPos-1].scale);
-  end;
 end;
 
 procedure RecalculateFrame();
@@ -216,11 +201,13 @@ begin
     Result := Trunc(Value);
 end;
 
+
 procedure RedrawFrame(canvas : TCanvas; pos : PositionData; frame : FrameData);
-var head, handY, middleX, middleY : integer;
+var head, handY, middleX, middleY, hrx, hry, hlx, hly : integer;
 begin
   canvas.Pen.Width := Ceil(lineWidth * pos.scale);        //настройка пера
   canvas.Pen.Color := clBlack;
+  canvas.Brush.Color := clWhite;
 
   canvas.MoveTo(pos.x, pos.y);                            //тело
   canvas.LineTo(pos.x, pos.y - Round(pos.scale * bodyHeight));
@@ -235,15 +222,17 @@ begin
   middleX := pos.x + Round(pos.scale * armLen * cos(frame.rhAngle1* Deg2Rad));
   middleY := handY + Round(pos.scale * armLen * sin(frame.rhAngle1* Deg2Rad));
   canvas.LineTo(middleX, middleY);
-  canvas.LineTo(middleX + Round(pos.scale * armLen * cos(frame.rhAngle1* Deg2Rad + frame.rhAngle2* Deg2Rad)),
-  middleY + Round(pos.scale * armLen * sin(frame.rhAngle1* Deg2Rad + frame.rhAngle2* Deg2Rad)));
+  hrx := middleX + Round(pos.scale * armLen * cos(frame.rhAngle1* Deg2Rad + frame.rhAngle2* Deg2Rad));
+  hry :=   middleY + Round(pos.scale * armLen * sin(frame.rhAngle1* Deg2Rad + frame.rhAngle2* Deg2Rad));
+  canvas.LineTo(hrx, hry);
 
   canvas.MoveTo(pos.x, handY);                                      //левая
   middleX := pos.x - Round(pos.scale * armLen * cos(frame.lhAngle1* Deg2Rad));
   middleY := handY + Round(pos.scale * armLen * sin(frame.lhAngle1* Deg2Rad));
   canvas.LineTo(middleX, middleY);
-  canvas.LineTo(middleX - Round(pos.scale * armLen * cos(frame.lhAngle1* Deg2Rad + frame.lhAngle2* Deg2Rad)),
-  middleY + Round(pos.scale * armLen * sin(frame.lhAngle1* Deg2Rad + frame.lhAngle2* Deg2Rad)));
+  hlx := middleX - Round(pos.scale * armLen * cos(frame.lhAngle1* Deg2Rad + frame.lhAngle2* Deg2Rad));
+  hly := middleY + Round(pos.scale * armLen * sin(frame.lhAngle1* Deg2Rad + frame.lhAngle2* Deg2Rad));
+  canvas.LineTo(hlx, hly);
 
                                                            //ноги
 
@@ -260,14 +249,27 @@ begin
   canvas.LineTo(middleX, middleY);
   canvas.LineTo(middleX - Round(pos.scale * legLen * cos(frame.llAngle1* Deg2Rad + frame.llAngle2* Deg2Rad)),
   middleY - Round(pos.scale * legLen * sin(frame.llAngle1* Deg2Rad + frame.llAngle2* Deg2Rad)));
-end;
 
-procedure RedrawFrame(canvas : TCanvas; pos : PositionData; frame : FrameData);
-var headRadius : integer;
-begin
-  headRadius := Round(40 * pos.scale);
-  Form2.Canvas.Pen.Color := clBlack;
-  Form2.Canvas.Ellipse(pos.x - headRadius, pos.y - headRadius, pos.x + headRadius, pos.y + headRadius);
+  if targetFrame >= addDiskFrame then
+  begin
+    if targetFrame >= startFlyDiskFrame then
+    begin
+      Inc(diskx1, diskSpeedX);
+      Inc(diskx2, diskSpeedX);
+      Inc(disky1, diskSpeedY);
+      Inc(disky2, diskSpeedY);
+    end
+    else
+    begin
+      diskX1 := hrx;
+      diskX2 := hlx;
+      diskY1 := hry;
+      diskY2 := hly;
+    end;
+
+    canvas.Brush.Color := clBlack;
+    canvas.Ellipse(diskx1, disky1, diskx2, disky2);
+  end;
 end;
 
 procedure TForm2.ChangeFrame(Sender: TObject);
@@ -276,7 +278,6 @@ begin
     Inc(targetFrame)
   else
     TTimer(Sender).Enabled :=  false;
-  Inc(frameId);
 end;
 
 
@@ -290,21 +291,19 @@ end;
 
 procedure TForm2.DrawFrame(Sender: TObject);
 begin
-  Form2.Canvas.Pen.Color := clWhite;
-  Form2.Canvas.FillRect(ClientRect);
 
   RecalculatePosition();
   RecalculateFrame();
+
+  Form2.Canvas.Draw(0, 0, bg);
+
   RedrawFrame(Form2.Canvas, currentPos, currentFrame);
-
-  Inc(targetPos);
 end;
-
-
 
 procedure TForm2.FormPaint(Sender: TObject);
 begin
-   DrawBG(Form2.Canvas, ClientWidth, ClientHeight);
+   bg.SetSize(ClientWidth, ClientHeight);
+   DrawBG(bg.Canvas, ClientWidth, ClientHeight);
 end;
 
 procedure TForm2.FormResize(Sender: TObject);
@@ -320,11 +319,11 @@ begin
   currentPos := positions[0];
   currentFrame := frames[0];
 
-  DrawBG(Form2.Canvas);
-  frameId := 0;
-
   currentPos := positions[0];
-  DrawBG(Form2.Canvas, ClientWidth, ClientHeight);
+
+  bg := TBitMap.Create;
+  bg.SetSize(ClientWidth, ClientHeight);
+  DrawBG(bg.Canvas, ClientWidth, ClientHeight);
 end;
 
 end.
