@@ -27,7 +27,7 @@ object Form2: TForm2
     Top = 384
   end
   object DrawTimer: TTimer
-    Interval = 100
+    Interval = 10
     OnTimer = DrawFrame
     Left = 384
     Top = 384

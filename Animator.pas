@@ -24,21 +24,21 @@ type
 
   FrameData = Record
 
-    rhAngle1 : integer;
-    rhAngle2 : integer;
-    lhAngle1 : integer;
-    lhAngle2 : integer;
-    rlAngle1 : integer;
-    rlAngle2 : integer;
-    llAngle1 : integer;
-    llAngle2 : integer;
+    rhAngle1 : real;
+    rhAngle2 : real;
+    lhAngle1 : real;
+    lhAngle2 : real;
+    rlAngle1 : real;
+    rlAngle2 : real;
+    llAngle1 : real;
+    llAngle2 : real;
 
     bodyHeight : integer;
 
   End;
 
   PositionData = Record
-    x, y : integer;
+    x, y : real;
     scale : real;
   End;
 
@@ -83,7 +83,7 @@ var
   targetFrame, targetPos, diskx1, diskx2, disky1, disky2 : integer;
   currentPos: PositionData;
   currentFrame : FrameData;
-  bg : TBitmap;
+  bg, buffer : TBitmap;
 
 {$R *.dfm}
 
@@ -179,17 +179,17 @@ begin
   begin
   mult := Form2.DrawTimer.Interval / Form2.FrameTimer.Interval;
 
-  currentFrame.rhAngle1:= currentFrame.rhAngle1 + Round(mult*(frames[targetFrame].rhAngle1 - frames[targetFrame-1].rhAngle1));
-  currentFrame.rhAngle2:= currentFrame.rhAngle2 + Round(mult*(frames[targetFrame].rhAngle2 - frames[targetFrame-1].rhAngle2));
+  currentFrame.rhAngle1:= currentFrame.rhAngle1 + (mult*(frames[targetFrame].rhAngle1 - frames[targetFrame-1].rhAngle1));
+  currentFrame.rhAngle2:= currentFrame.rhAngle2 + (mult*(frames[targetFrame].rhAngle2 - frames[targetFrame-1].rhAngle2));
 
-  currentFrame.lhAngle1:= currentFrame.lhAngle1 + Round(mult*(frames[targetFrame].lhAngle1 - frames[targetFrame-1].lhAngle1));
-  currentFrame.lhAngle2:= currentFrame.lhAngle2 + Round(mult*(frames[targetFrame].lhAngle2 - frames[targetFrame-1].llAngle2));
+  currentFrame.lhAngle1:= currentFrame.lhAngle1 + (mult*(frames[targetFrame].lhAngle1 - frames[targetFrame-1].lhAngle1));
+  currentFrame.lhAngle2:= currentFrame.lhAngle2 + (mult*(frames[targetFrame].lhAngle2 - frames[targetFrame-1].llAngle2));
 
-  currentFrame.rlAngle1:= currentFrame.rlAngle1 + Round(mult*(frames[targetFrame].rlAngle1 - frames[targetFrame-1].rlAngle1));
-  currentFrame.rlAngle2:= currentFrame.rlAngle2 + Round(mult*(frames[targetFrame].rlAngle2 - frames[targetFrame-1].rlAngle2));
+  currentFrame.rlAngle1:= currentFrame.rlAngle1 + (mult*(frames[targetFrame].rlAngle1 - frames[targetFrame-1].rlAngle1));
+  currentFrame.rlAngle2:= currentFrame.rlAngle2 + (mult*(frames[targetFrame].rlAngle2 - frames[targetFrame-1].rlAngle2));
 
-  currentFrame.llAngle1:= currentFrame.llAngle1 + Round(mult*(frames[targetFrame].llAngle1 - frames[targetFrame-1].llAngle1));
-  currentFrame.llAngle2:= currentFrame.llAngle2 + Round(mult*(frames[targetFrame].llAngle2 - frames[targetFrame-1].llAngle2));
+  currentFrame.llAngle1:= currentFrame.llAngle1 + (mult*(frames[targetFrame].llAngle1 - frames[targetFrame-1].llAngle1));
+  currentFrame.llAngle2:= currentFrame.llAngle2 + (mult*(frames[targetFrame].llAngle2 - frames[targetFrame-1].llAngle2));
   end;
 end;
 
@@ -209,25 +209,25 @@ begin
   canvas.Pen.Color := clBlack;
   canvas.Brush.Color := clWhite;
 
-  canvas.MoveTo(pos.x, pos.y);                            //тело
-  canvas.LineTo(pos.x, pos.y - Round(pos.scale * bodyHeight));
+  canvas.MoveTo(Round(pos.x), Round(pos.y));                            //тело
+  canvas.LineTo(Round(pos.x), Round(pos.y - pos.scale * bodyHeight));
 
   head := Round(headRadius * pos.scale);                  //голова
-  Form2.Canvas.Ellipse(pos.x - head, pos.y - Round(pos.scale * bodyHeight),
-  pos.x + head, pos.y - Round(pos.scale * bodyHeight) - 2 * head);
+  canvas.Ellipse(Round(pos.x - head), Round(pos.y - pos.scale * bodyHeight),
+  Round(pos.x + head), Round(pos.y - pos.scale * bodyHeight) - 2 * head);
 
-  handY := pos.y - Round(pos.scale * armHeight);          //руки
+  handY := Round(pos.y - pos.scale * armHeight);          //руки
 
-  canvas.MoveTo(pos.x, handY);                                      //правая
-  middleX := pos.x + Round(pos.scale * armLen * cos(frame.rhAngle1* Deg2Rad));
+  canvas.MoveTo(Round(pos.x), handY);                                      //правая
+  middleX := Round(pos.x + pos.scale * armLen * cos(frame.rhAngle1* Deg2Rad));
   middleY := handY + Round(pos.scale * armLen * sin(frame.rhAngle1* Deg2Rad));
   canvas.LineTo(middleX, middleY);
   hrx := middleX + Round(pos.scale * armLen * cos(frame.rhAngle1* Deg2Rad + frame.rhAngle2* Deg2Rad));
   hry :=   middleY + Round(pos.scale * armLen * sin(frame.rhAngle1* Deg2Rad + frame.rhAngle2* Deg2Rad));
   canvas.LineTo(hrx, hry);
 
-  canvas.MoveTo(pos.x, handY);                                      //левая
-  middleX := pos.x - Round(pos.scale * armLen * cos(frame.lhAngle1* Deg2Rad));
+  canvas.MoveTo(Round(pos.x), handY);                                      //левая
+  middleX := Round(pos.x - pos.scale * armLen * cos(frame.lhAngle1* Deg2Rad));
   middleY := handY + Round(pos.scale * armLen * sin(frame.lhAngle1* Deg2Rad));
   canvas.LineTo(middleX, middleY);
   hlx := middleX - Round(pos.scale * armLen * cos(frame.lhAngle1* Deg2Rad + frame.lhAngle2* Deg2Rad));
@@ -236,16 +236,16 @@ begin
 
                                                            //ноги
 
-  canvas.MoveTo(pos.x, pos.y);                                      //правая
-  middleX := pos.x + Round(pos.scale * legLen * cos(frame.rlAngle1* Deg2Rad));
-  middleY := pos.y - Round(pos.scale * legLen * sin(frame.rlAngle1* Deg2Rad));
+  canvas.MoveTo(Round(pos.x), Round(pos.y));                                      //правая
+  middleX := Round(pos.x + pos.scale * legLen * cos(frame.rlAngle1* Deg2Rad));
+  middleY := Round(pos.y - pos.scale * legLen * sin(frame.rlAngle1* Deg2Rad));
   canvas.LineTo(middleX, middleY);
   canvas.LineTo(middleX + Round(pos.scale * legLen * cos(frame.rlAngle1* Deg2Rad + frame.rlAngle2* Deg2Rad)),
   middleY - Round(pos.scale * legLen * sin(frame.rlAngle1* Deg2Rad + frame.rlAngle2* Deg2Rad)));
 
-  canvas.MoveTo(pos.x, pos.y);                                      //левая
-  middleX := pos.x - Round(pos.scale * legLen * cos(frame.llAngle1* Deg2Rad));
-  middleY := pos.y - Round(pos.scale * legLen * sin(frame.llAngle1* Deg2Rad));
+  canvas.MoveTo(Round(pos.x), Round(pos.y));                                      //левая
+  middleX := Round(pos.x - pos.scale * legLen * cos(frame.llAngle1* Deg2Rad));
+  middleY := Round(pos.y - pos.scale * legLen * sin(frame.llAngle1* Deg2Rad));
   canvas.LineTo(middleX, middleY);
   canvas.LineTo(middleX - Round(pos.scale * legLen * cos(frame.llAngle1* Deg2Rad + frame.llAngle2* Deg2Rad)),
   middleY - Round(pos.scale * legLen * sin(frame.llAngle1* Deg2Rad + frame.llAngle2* Deg2Rad)));
@@ -295,14 +295,16 @@ begin
   RecalculatePosition();
   RecalculateFrame();
 
-  Form2.Canvas.Draw(0, 0, bg);
+  buffer.Canvas.Draw(0, 0, bg);
+  RedrawFrame(buffer.Canvas, currentPos, currentFrame);
 
-  RedrawFrame(Form2.Canvas, currentPos, currentFrame);
+  Form2.Canvas.Draw(0, 0, buffer);
 end;
 
 procedure TForm2.FormPaint(Sender: TObject);
 begin
    bg.SetSize(ClientWidth, ClientHeight);
+   buffer.SetSize(ClientWidth, ClientHeight);
    DrawBG(bg.Canvas, ClientWidth, ClientHeight);
 end;
 
@@ -323,6 +325,9 @@ begin
 
   bg := TBitMap.Create;
   bg.SetSize(ClientWidth, ClientHeight);
+  buffer := TBitMap.Create;
+  buffer.SetSize(ClientWidth, ClientHeight);
+
   DrawBG(bg.Canvas, ClientWidth, ClientHeight);
 end;
 
