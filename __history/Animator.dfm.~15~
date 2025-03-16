@@ -1,7 +1,7 @@
 object Form2: TForm2
   Left = 0
   Top = 0
-  Caption = 'Form2'
+  Caption = '2'
   ClientHeight = 441
   ClientWidth = 624
   Color = clBtnFace
@@ -12,14 +12,9 @@ object Form2: TForm2
   Font.Style = []
   WindowState = wsMaximized
   OnCreate = Init
-  OnPaint = FormPaint
-  OnResize = FormResize
   TextHeight = 15
   object FrameTimer: TTimer
-<<<<<<< Updated upstream
-=======
     Interval = 300
->>>>>>> Stashed changes
     OnTimer = ChangeFrame
     Left = 472
     Top = 384
@@ -31,12 +26,8 @@ object Form2: TForm2
     Top = 384
   end
   object DrawTimer: TTimer
-<<<<<<< Updated upstream
-    Interval = 50
-=======
     Interval = 60
     OnTimer = DrawFrame
->>>>>>> Stashed changes
     Left = 384
     Top = 384
   end

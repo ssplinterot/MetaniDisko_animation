@@ -1,0 +1,410 @@
+unit Animator;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls;
+
+type
+  TForm2 = class(TForm)
+    FrameTimer: TTimer;
+    TargetTimer: TTimer;
+    DrawTimer: TTimer;
+    procedure ChangeFrame(Sender: TObject);
+    procedure Init(Sender: TObject);
+    procedure ChangeMoveTarget(Sender: TObject);
+    procedure DrawFrame(Sender: TObject);
+    procedure FormPaint(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+  FrameData = Record
+    rhAngle1 : integer;
+    rhAngle2 : integer;
+    lhAngle1 : integer;
+    lhAngle2 : integer;
+    rlAngle1 : integer;
+    rlAngle2 : integer;
+    llAngle1 : integer;
+    llAngle2 : integer;
+  End;
+
+  PositionData = Record
+    x, y : integer;
+    scale : real;
+  End;
+
+var
+  Form2: TForm2;
+
+implementation
+
+
+{$R *.dfm}
+
+const
+  positions: array[0..1] of PositionData =
+    (
+      (x: 100; y: 500; scale: 1),
+      (x: 700; y: 750; scale: 1.5)
+     // (x: 400; y: 500; scale: 1),
+     // (x: 500; y: 500; scale: 1)
+    );
+
+  frames: array[0..19] of FrameData =
+    (
+      (rhAngle1: 75;  rhAngle2: -30; lhAngle1: 70; lhAngle2: 35; rlAngle1: -70; rlAngle2: -5;  llAngle1: -80; llAngle2: 10),
+      (rhAngle1: 85;  rhAngle2: -40; lhAngle1: 85; lhAngle2: 50; rlAngle1:-75; rlAngle2: -10;  llAngle1: -85; llAngle2: 20),
+     (rhAngle1: 100;  rhAngle2: -40; lhAngle1: 90; lhAngle2: 45; rlAngle1:-80; rlAngle2: -20;  llAngle1: -90; llAngle2: 30),
+     (rhAngle1: 80;  rhAngle2: -20; lhAngle1: 80; lhAngle2: 30; rlAngle1:-80; rlAngle2: -10;  llAngle1: -95; llAngle2: 10),
+     (rhAngle1: 70;  rhAngle2: -30; lhAngle1: 70; lhAngle2: 35; rlAngle1:-85; rlAngle2: -20;  llAngle1: -90; llAngle2: 0),
+     (rhAngle1: 80;  rhAngle2: -20; lhAngle1: 65; lhAngle2: 25; rlAngle1:-75; rlAngle2: -10;  llAngle1: -88; llAngle2: 5),
+
+       (rhAngle1: 75;  rhAngle2: -30; lhAngle1: 70; lhAngle2: 35; rlAngle1: -70; rlAngle2: -5;  llAngle1: -80; llAngle2: 10),
+      (rhAngle1: 85;  rhAngle2: -40; lhAngle1: 85; lhAngle2: 50; rlAngle1:-75; rlAngle2: -10;  llAngle1: -85; llAngle2: 20),
+     (rhAngle1: 100;  rhAngle2: -40; lhAngle1: 90; lhAngle2: 45; rlAngle1:-80; rlAngle2: -20;  llAngle1: -90; llAngle2: 30),
+     (rhAngle1: 80;  rhAngle2: -20; lhAngle1: 80; lhAngle2: 30; rlAngle1:-80; rlAngle2: -10;  llAngle1: -95; llAngle2: 10),
+     (rhAngle1: 70;  rhAngle2: -30; lhAngle1: 70; lhAngle2: 35; rlAngle1:-85; rlAngle2: -20;  llAngle1: -90; llAngle2: 0),
+     (rhAngle1: 80;  rhAngle2: -20; lhAngle1: 65; lhAngle2: 25; rlAngle1:-75; rlAngle2: -10;  llAngle1: -88; llAngle2: 5),
+
+     (rhAngle1: 75;  rhAngle2: -30; lhAngle1: 70; lhAngle2: 35; rlAngle1: -70; rlAngle2: -5;  llAngle1: -80; llAngle2: 10),
+      (rhAngle1: 85;  rhAngle2: -40; lhAngle1: 85; lhAngle2: 50; rlAngle1:-75; rlAngle2: -10;  llAngle1: -85; llAngle2: 20),
+     (rhAngle1: 100;  rhAngle2: -40; lhAngle1: 90; lhAngle2: 45; rlAngle1:-80; rlAngle2: -20;  llAngle1: -90; llAngle2: 30),
+     (rhAngle1: 80;  rhAngle2: -20; lhAngle1: 80; lhAngle2: 30; rlAngle1:-80; rlAngle2: -10;  llAngle1: -95; llAngle2: 10),
+     (rhAngle1: 70;  rhAngle2: -30; lhAngle1: 70; lhAngle2: 35; rlAngle1:-85; rlAngle2: -20;  llAngle1: -90; llAngle2: 0),
+     (rhAngle1: 80;  rhAngle2: -20; lhAngle1: 65; lhAngle2: 25; rlAngle1:-75; rlAngle2: -10;  llAngle1: -88; llAngle2: 5),
+
+      (rhAngle1: 40;  rhAngle2: -30; lhAngle1: 140; lhAngle2: 35; rlAngle1: -70; rlAngle2: -5;  llAngle1: -80; llAngle2: 10),
+      (rhAngle1: 10;  rhAngle2: -30; lhAngle1: 180; lhAngle2: 35; rlAngle1: -70; rlAngle2: -5;  llAngle1: -80; llAngle2: 10)
+    );
+
+  Deg2Rad = Pi / 180;
+  lineWidth  = 2;
+  bodyHeight = 80;
+  headRadius = 20;
+
+  armHeight = 65;
+  armLen    = 40;
+  legLen    = 50;
+
+var
+  targetFrame, targetPos: Integer;
+  currentPos: PositionData;
+  currentFrame: FrameData;
+
+  // Дополнительные переменные для появления блока
+var
+  FrameCounter: Integer = 0;   // Счётчик срабатываний таймера кадров
+  BlockInHand: Boolean = False;  // Флаг того, что блок уже в руке
+  NumBlins: Integer = 5;         // Количество «блинов» (черных блоков) на подставке
+
+// Функция округления вверх
+function MyCeil(Value: Extended): Integer;
+begin
+  if Value > Trunc(Value) then
+    Result := Trunc(Value) + 1
+  else
+    Result := Trunc(Value);
+end;
+
+// ----------------------------
+// Рисование фона
+// ----------------------------
+procedure DrawBG(Canvas: TCanvas; Width, Height: Integer);
+var
+  TableRect, BlinRect: TRect;
+  TableHeight, TableWidth, TableTop, BlinWidth, BlinHeight, i: Integer;
+begin
+  // Рисуем задний фон (небо и землю)
+  canvas.Brush.Color := clSkyBlue;
+  canvas.FillRect(Rect(0, 0, Width, Height div 2)); // Верхняя половина — небо
+  canvas.Brush.Color := clGreen;
+  canvas.FillRect(Rect(0, Height div 2, Width, Height)); // Нижняя половина — земля
+
+  // Параметры тумбочки (подставки)
+  TableHeight := 150;  // Высота тумбочки
+  TableWidth := 100;   // Ширина тумбочки
+  TableTop := Height div 2 - TableHeight; // Верхняя граница тумбочки
+
+  // Координаты тумбочки (центрируется)
+  TableRect.Left := ((Width - TableWidth) div 2)-200;
+  TableRect.Top := TableTop+380;
+  TableRect.Right := TableRect.Left + TableWidth;
+  TableRect.Bottom := Height -100;
+
+  // Рисуем тумбочку
+  canvas.Brush.Color := RGB(139, 69, 19); // Темно-коричневый цвет
+  canvas.Pen.Color := clBlack;
+  canvas.Rectangle(TableRect);
+
+  // Параметры блинов
+  BlinWidth := TableWidth - 20; // Ширина блинов чуть меньше ширины тумбочки
+  BlinHeight := 10;            // Высота каждого блина
+  canvas.Brush.Color := clBlack;
+
+  // Рисуем стопку блинов. Если NumBlins уменьшилось, меньше блоков будет отрисовано.
+for i := 0 to NumBlins - 1 do
+  begin
+    BlinRect.Left := TableRect.Left + 10 + (i * 2); // каждый блин с небольшим смещением
+    BlinRect.Right := BlinRect.Left + BlinWidth - (i * 4);
+    BlinRect.Top := TableRect.Top - (i + 1) * BlinHeight;
+    BlinRect.Bottom := BlinRect.Top + BlinHeight;
+    Canvas.Rectangle(BlinRect);
+  end;
+end;
+
+// ----------------------------
+// Функция рисования сетки
+// ----------------------------
+procedure DrawGrid(Canvas: TCanvas; Width, Height: Integer; CellSize: Integer);
+var
+  i: Integer;
+begin
+  Canvas.Pen.Color := clGray; // Цвет линий сетки
+  Canvas.Pen.Width := 1;      // Толщина линий
+  // Вертикальные линии
+  i := 0;
+  while i < Width do
+  begin
+    Canvas.MoveTo(i, 0);
+    Canvas.LineTo(i, Height);
+    Inc(i, CellSize);
+  end;
+  // Горизонтальные линии
+  i := 0;
+  while i < Height do
+  begin
+    Canvas.MoveTo(0, i);
+    Canvas.LineTo(Width, i);
+    Inc(i, CellSize);
+  end;
+end;
+
+// ----------------------------
+// Пересчёт позиции
+// ----------------------------
+procedure RecalculatePosition();
+var
+  mult: Real;
+begin
+  if Form2.TargetTimer.Enabled then
+  begin
+    mult := Form2.DrawTimer.Interval / Form2.TargetTimer.Interval;
+    currentPos.x := currentPos.x +
+      Round(mult * (positions[targetPos].x - positions[targetPos-1].x));
+    currentPos.y := currentPos.y +
+      Round(mult * (positions[targetPos].y - positions[targetPos-1].y));
+    currentPos.scale := currentPos.scale +
+      mult * (positions[targetPos].scale - positions[targetPos-1].scale);
+  end;
+end;
+
+// ----------------------------
+// Пересчёт параметров анимации (кадра)
+// ----------------------------
+procedure RecalculateFrame();
+var
+  mult: Real;
+begin
+  if Form2.FrameTimer.Enabled then
+  begin
+    mult := Form2.DrawTimer.Interval / Form2.FrameTimer.Interval;
+
+    currentFrame.rhAngle1 := currentFrame.rhAngle1 +
+      Round(mult * (frames[targetFrame].rhAngle1 - frames[targetFrame-1].rhAngle1));
+    currentFrame.rhAngle2 := currentFrame.rhAngle2 +
+      Round(mult * (frames[targetFrame].rhAngle2 - frames[targetFrame-1].rhAngle2));
+
+    currentFrame.lhAngle1 := currentFrame.lhAngle1 +
+      Round(mult * (frames[targetFrame].lhAngle1 - frames[targetFrame-1].lhAngle1));
+    // Замечание: здесь использовалось frames[targetFrame-1].llAngle2, возможно, это описка.
+    currentFrame.lhAngle2 := currentFrame.lhAngle2 +
+      Round(mult * (frames[targetFrame].lhAngle2 - frames[targetFrame-1].lhAngle2));
+
+    currentFrame.rlAngle1 := currentFrame.rlAngle1 +
+      Round(mult * (frames[targetFrame].rlAngle1 - frames[targetFrame-1].rlAngle1));
+    currentFrame.rlAngle2 := currentFrame.rlAngle2 +
+      Round(mult * (frames[targetFrame].rlAngle2 - frames[targetFrame-1].rlAngle2));
+
+    currentFrame.llAngle1 := currentFrame.llAngle1 +
+      Round(mult * (frames[targetFrame].llAngle1 - frames[targetFrame-1].llAngle1));
+    currentFrame.llAngle2 := currentFrame.llAngle2 +
+      Round(mult * (frames[targetFrame].llAngle2 - frames[targetFrame-1].llAngle2));
+  end;
+end;
+
+// ----------------------------
+// Функция Ceil (если Math не используется)
+// ----------------------------
+function Ceil(Value: Extended): Integer;
+begin
+  if Value > Trunc(Value) then
+    Result := Trunc(Value) + 1
+  else
+    Result := Trunc(Value);
+end;
+
+// ----------------------------
+// Отрисовка анимационного кадра
+// ----------------------------
+procedure RedrawFrame(Canvas: TCanvas; pos: PositionData; frame: FrameData);
+var
+  head, handY, middleX, middleY: Integer;
+begin
+  Canvas.Pen.Width := Ceil(lineWidth * pos.scale*5);
+  Canvas.Pen.Color := clBlack;
+
+  // Тело
+  Canvas.MoveTo(pos.x, pos.y);
+  Canvas.LineTo(pos.x, pos.y - Round(pos.scale * bodyHeight));
+
+  // Голова
+  head := Round(headRadius * pos.scale);
+  Form2.Canvas.Ellipse(pos.x - head,
+    pos.y - Round(pos.scale * bodyHeight),
+    pos.x + head,
+    pos.y - Round(pos.scale * bodyHeight) - 2 * head);
+
+  // Руки (начинаются от уровня handY)
+  handY := pos.y - Round(pos.scale * armHeight);
+
+  // Правая рука
+  Canvas.MoveTo(pos.x, handY);
+  middleX := pos.x + Round(pos.scale * armLen * Cos(frame.rhAngle1 * Deg2Rad));
+  middleY := handY + Round(pos.scale * armLen * Sin(frame.rhAngle1 * Deg2Rad));
+  Canvas.LineTo(middleX, middleY);
+  Canvas.LineTo(
+    middleX + Round(pos.scale * armLen * Cos(frame.rhAngle1 * Deg2Rad + frame.rhAngle2 * Deg2Rad)),
+    middleY + Round(pos.scale * armLen * Sin(frame.rhAngle1 * Deg2Rad + frame.rhAngle2 * Deg2Rad))
+  );
+
+  // Левая рука
+  Canvas.MoveTo(pos.x, handY);
+  middleX := pos.x - Round(pos.scale * armLen * Cos(frame.lhAngle1 * Deg2Rad));
+  middleY := handY + Round(pos.scale * armLen * Sin(frame.lhAngle1 * Deg2Rad));
+  Canvas.LineTo(middleX, middleY);
+  Canvas.LineTo(
+    middleX - Round(pos.scale * armLen * Cos(frame.lhAngle1 * Deg2Rad + frame.lhAngle2 * Deg2Rad)),
+    middleY + Round(pos.scale * armLen * Sin(frame.lhAngle1 * Deg2Rad + frame.lhAngle2 * Deg2Rad))
+  );
+
+  // Ноги
+  // Правая нога
+  Canvas.MoveTo(pos.x, pos.y);
+  middleX := pos.x + Round(pos.scale * legLen * Cos(frame.rlAngle1 * Deg2Rad));
+  middleY := pos.y - Round(pos.scale * legLen * Sin(frame.rlAngle1 * Deg2Rad));
+  Canvas.LineTo(middleX, middleY);
+  Canvas.LineTo(
+    middleX + Round(pos.scale * legLen * Cos(frame.rlAngle1 * Deg2Rad + frame.rlAngle2 * Deg2Rad)),
+    middleY - Round(pos.scale * legLen * Sin(frame.rlAngle1 * Deg2Rad + frame.rlAngle2 * Deg2Rad))
+  );
+
+  // Левая нога
+  Canvas.MoveTo(pos.x, pos.y);
+  middleX := pos.x - Round(pos.scale * legLen * Cos(frame.llAngle1 * Deg2Rad));
+  middleY := pos.y - Round(pos.scale * legLen * Sin(frame.llAngle1 * Deg2Rad));
+  Canvas.LineTo(middleX, middleY);
+  Canvas.LineTo(
+    middleX - Round(pos.scale * legLen * Cos(frame.llAngle1 * Deg2Rad + frame.llAngle2 * Deg2Rad)),
+    middleY - Round(pos.scale * legLen * Sin(frame.llAngle1 * Deg2Rad + frame.llAngle2 * Deg2Rad))
+  );
+end;
+
+// ----------------------------
+// Обработчики событий формы
+// ----------------------------
+procedure TForm2.ChangeFrame(Sender: TObject);
+begin
+  if targetFrame < Length(frames) - 1 then
+    Inc(targetFrame)
+  else
+    TTimer(Sender).Enabled := False;
+end;
+
+procedure TForm2.ChangeMoveTarget(Sender: TObject);
+begin
+  if targetPos < Length(positions) - 1 then
+    Inc(targetPos)
+  else
+    TTimer(Sender).Enabled := False;
+
+     Inc(FrameCounter);
+  // После 8-ти срабатываний (примерно через 8 * 200 ms) – поднимаем блок в руку,
+  // и уменьшаем количество блинов на подставке, если блок еще не подобран.
+  if (FrameCounter >= 8) and (not BlockInHand) then
+  begin
+    BlockInHand := True;
+    if NumBlins > 0 then
+      Dec(NumBlins);
+  end;
+end;
+
+procedure TForm2.FormPaint(Sender: TObject);
+var
+  Bitmap: TBitmap;
+begin
+  Bitmap := TBitmap.Create;
+  try
+    Bitmap.Width := ClientWidth;
+    Bitmap.Height := ClientHeight;
+    // Рисуем на битмапе (фон и сетку)
+    Bitmap.Canvas.Brush.Color := clWhite;
+    Bitmap.Canvas.FillRect(ClientRect);
+    DrawGrid(Bitmap.Canvas, ClientWidth, ClientHeight, 50);
+    Canvas.Draw(0, 0, Bitmap);
+  finally
+    Bitmap.Free;
+  end;
+end;
+
+procedure TForm2.DrawFrame(Sender: TObject);
+begin
+  // Сначала рисуем фон и облаки, затем пересчитываем позицию и кадр,
+  // отрисовываем фигуру, а после этого добавляем поверх всё сетку.
+  DrawBG(Form2.Canvas, ClientWidth, ClientHeight);
+  RecalculatePosition();
+  RecalculateFrame();
+  RedrawFrame(Form2.Canvas, currentPos, currentFrame);
+  // Отрисовка сетки поверх анимации:
+ // DrawGrid(Form2.Canvas, ClientWidth, ClientHeight, 50);
+end;
+
+procedure TForm2.FrameTimerTimer(Sender: TObject);
+begin
+  if targetFrame < Length(frames) - 1 then
+    Inc(targetFrame)
+  else
+    targetFrame := 1;  // Зацикливаем анимацию ходьбы
+
+  // При смене кадра устанавливаем базовую позу для интерполяции
+  currentFrame := frames[targetFrame - 1];
+
+  // Увеличиваем счётчик срабатываний таймера
+  Inc(FrameCounter);
+  // После определённого количества (например, 8) срабатываний, если блок ещё не появился,
+  // делаем его появление (BlockInHand := True) – и он остаётся до конца работы формы.
+  if (FrameCounter >= 8) and (not BlockInHand) then
+  begin
+    BlockInHand := True;
+    if NumBlins > 0 then
+      Dec(NumBlins);
+  end;
+end;
+
+procedure TForm2.Init(Sender: TObject);
+begin
+  targetPos := 1;
+  targetFrame := 1;
+
+  currentPos := positions[0];
+  currentFrame := frames[0];
+
+  DrawBG(Form2.Canvas, Width, Height);
+end;
+
+end.
+
