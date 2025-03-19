@@ -48,6 +48,75 @@ var
 
 implementation
 
+<<<<<<< Updated upstream
+=======
+const
+positions: array[0..2] of PositionData =
+    (
+      (x: 100; y: 500; scale: 1),
+      (x: 700; y: 750; scale: 1.5),
+     (x: 1000; y: 500; scale: 1.8)
+     // (x: 500; y: 500; scale: 1)
+    );
+
+frames: array[0..33] of FrameData =
+    (
+      (rhAngle1: 75;  rhAngle2: -30; lhAngle1: 70; lhAngle2: 35; rlAngle1: -70; rlAngle2: -5;  llAngle1: -80; llAngle2: 10),
+      (rhAngle1: 85;  rhAngle2: -40; lhAngle1: 85; lhAngle2: 50; rlAngle1:-75; rlAngle2: -10;  llAngle1: -85; llAngle2: 20),
+     (rhAngle1: 100;  rhAngle2: -40; lhAngle1: 90; lhAngle2: 45; rlAngle1:-80; rlAngle2: -20;  llAngle1: -90; llAngle2: 30),
+     (rhAngle1: 80;  rhAngle2: -20; lhAngle1: 80; lhAngle2: 30; rlAngle1:-80; rlAngle2: -10;  llAngle1: -95; llAngle2: 10),
+     (rhAngle1: 70;  rhAngle2: -30; lhAngle1: 70; lhAngle2: 35; rlAngle1:-85; rlAngle2: -20;  llAngle1: -90; llAngle2: 0),
+     (rhAngle1: 80;  rhAngle2: -20; lhAngle1: 65; lhAngle2: 25; rlAngle1:-75; rlAngle2: -10;  llAngle1: -88; llAngle2: 5),
+
+       (rhAngle1: 75;  rhAngle2: -30; lhAngle1: 70; lhAngle2: 35; rlAngle1: -70; rlAngle2: -5;  llAngle1: -80; llAngle2: 10),
+      (rhAngle1: 85;  rhAngle2: -40; lhAngle1: 85; lhAngle2: 50; rlAngle1:-75; rlAngle2: -10;  llAngle1: -85; llAngle2: 20),
+     (rhAngle1: 100;  rhAngle2: -40; lhAngle1: 90; lhAngle2: 45; rlAngle1:-80; rlAngle2: -20;  llAngle1: -90; llAngle2: 30),
+     (rhAngle1: 80;  rhAngle2: -20; lhAngle1: 80; lhAngle2: 30; rlAngle1:-80; rlAngle2: -10;  llAngle1: -95; llAngle2: 10),
+     (rhAngle1: 70;  rhAngle2: -30; lhAngle1: 70; lhAngle2: 35; rlAngle1:-85; rlAngle2: -20;  llAngle1: -90; llAngle2: 0),
+     (rhAngle1: 80;  rhAngle2: -20; lhAngle1: 65; lhAngle2: 25; rlAngle1:-75; rlAngle2: -10;  llAngle1: -88; llAngle2: 5),
+
+     (rhAngle1: 75;  rhAngle2: -30; lhAngle1: 70; lhAngle2: 35; rlAngle1: -70; rlAngle2: -5;  llAngle1: -80; llAngle2: 10),
+      (rhAngle1: 85;  rhAngle2: -40; lhAngle1: 85; lhAngle2: 50; rlAngle1:-75; rlAngle2: -10;  llAngle1: -85; llAngle2: 20),
+     (rhAngle1: 100;  rhAngle2: -40; lhAngle1: 90; lhAngle2: 45; rlAngle1:-80; rlAngle2: -20;  llAngle1: -90; llAngle2: 30),
+     (rhAngle1: 80;  rhAngle2: -20; lhAngle1: 80; lhAngle2: 30; rlAngle1:-80; rlAngle2: -10;  llAngle1: -95; llAngle2: 10),
+     (rhAngle1: 70;  rhAngle2: -30; lhAngle1: 70; lhAngle2: 35; rlAngle1:-85; rlAngle2: -20;  llAngle1: -90; llAngle2: 0),
+     (rhAngle1: 80;  rhAngle2: -20; lhAngle1: 65; lhAngle2: 25; rlAngle1:-75; rlAngle2: -10;  llAngle1: -88; llAngle2: 5),
+
+      (rhAngle1: 40;  rhAngle2: -30; lhAngle1: 140; lhAngle2: 35; rlAngle1: -70; rlAngle2: -5;  llAngle1: -80; llAngle2: 10),
+      (rhAngle1: 10;  rhAngle2: -30; lhAngle1: 180; lhAngle2: 35; rlAngle1: -70; rlAngle2: -5;  llAngle1: -80; llAngle2: 10),
+      (rhAngle1: 10;  rhAngle2: -30; lhAngle1: 180; lhAngle2: 35; rlAngle1:-75; rlAngle2: -10;  llAngle1: -85; llAngle2: 20),
+      (rhAngle1: 10;  rhAngle2: -30; lhAngle1: 180; lhAngle2: 35;  rlAngle1:-80; rlAngle2: -20;  llAngle1: -90; llAngle2: 30),
+      (rhAngle1: 40;  rhAngle2: -30; lhAngle1: 140; lhAngle2: 35; rlAngle1:-80; rlAngle2: -10;  llAngle1: -95; llAngle2: 10),
+     (rhAngle1: 40;  rhAngle2: -30; lhAngle1: 140; lhAngle2: 35; rlAngle1:-85; rlAngle2: -20;  llAngle1: -90; llAngle2: 0),
+     (rhAngle1: 40;  rhAngle2: -30; lhAngle1: 140; lhAngle2: 35; rlAngle1:-75; rlAngle2: -10;  llAngle1: -88; llAngle2: 5),
+
+      (rhAngle1: 40;  rhAngle2: -30; lhAngle1: 140; lhAngle2: 35; rlAngle1: -70; rlAngle2: -5;  llAngle1: -80; llAngle2: 10),
+      (rhAngle1: 40;  rhAngle2: -30; lhAngle1: 140; lhAngle2: 35; rlAngle1:-75; rlAngle2: -10;  llAngle1: -85; llAngle2: 20),
+     (rhAngle1: 40;  rhAngle2: -30; lhAngle1: 140; lhAngle2: 35; rlAngle1:-80; rlAngle2: -20;  llAngle1: -90; llAngle2: 30),
+     (rhAngle1: 40;  rhAngle2: -30; lhAngle1: 140; lhAngle2: 35; rlAngle1:-80; rlAngle2: -10;  llAngle1: -95; llAngle2: 10),
+     (rhAngle1: 40;  rhAngle2: -30; lhAngle1: 140; lhAngle2: 35; rlAngle1:-85; rlAngle2: -20;  llAngle1: -90; llAngle2: 0),
+     (rhAngle1: 40;  rhAngle2: -30; lhAngle1: 140; lhAngle2: 35; rlAngle1:-75; rlAngle2: -10;  llAngle1: -88; llAngle2: 5),
+
+     (rhAngle1: 90;  rhAngle2: -10; lhAngle1: 90; lhAngle2: 15; rlAngle1: -70; rlAngle2: -5;  llAngle1: -80; llAngle2: 10),
+     (rhAngle1: 130;  rhAngle2: -10; lhAngle1: 30; lhAngle2: 15;rlAngle1: -70; rlAngle2: -5;  llAngle1: -80; llAngle2: 10),
+     (rhAngle1: 230;  rhAngle2: -10; lhAngle1: 80; lhAngle2: 15;rlAngle1:-80; rlAngle2: -20;  llAngle1: -90; llAngle2: 30)
+    );
+
+Deg2Rad = Pi / 180;
+
+lineWidth = 2;
+bodyHeight = 80;
+headRadius = 20;
+
+armHeight = 65;
+armLen = 40;
+legLen = 50;
+
+var
+  targetFrame, targetPos : integer;
+  currentPos: PositionData;
+  currentFrame : FrameData;
+>>>>>>> Stashed changes
 
 {$R *.dfm}
 
